@@ -37,9 +37,10 @@ export class MurmursController {
 
   @Get('specific-user/:user_id')
   getUserMurmurs(
-    @Param('user_id', ParseIntPipe) userId: number
+    @Param('user_id', ParseIntPipe) userId: number,
+    @Request() req: any
   ) {
-    return this.murmursService.getUserMurmurs(userId);
+    return this.murmursService.getUserMurmurs(userId, req.user);
   }
 
   @Get('timeline')

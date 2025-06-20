@@ -5,11 +5,11 @@ import cookie from "js-cookie";
 import { Card, Layout } from "antd";
 import TopNavbar from "./topbar";
 import { UserProfile } from "../interfaces/common.interface";
-const { Content } = Layout;
 
 const AuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
     const [profile, setProfile] = useState<UserProfile>({
+        id: 0,
         email: "",
         name: "",
         follower_count: 0,
@@ -34,10 +34,13 @@ const AuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             console.log(error);
         }
     }
-
+    const accessToken = cookie.get('access_token');
     useEffect(() => {
+        if(!accessToken) {
+            navigate('/login');
+        }
         fetchMyProfile();
-    }, []);
+    }, [accessToken]);
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <TopNavbar

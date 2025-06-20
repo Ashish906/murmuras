@@ -19,15 +19,10 @@ function App() {
             <Route path="/registration" element={<Registration />} />
           </Routes>
       </Suspense>
-      {
-        accessToken ? 
-          (
-            <AuthWrapper>
-              <BaseRoute />
-            </AuthWrapper>
-          )
-        : null
-      }
+      
+      <AuthWrapper>
+        <BaseRoute />
+      </AuthWrapper>
     </BrowserRouter>
   )
 }
