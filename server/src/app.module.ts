@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { User } from './modules/auth/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true
     }),
     TypeOrmModule.forFeature([User]),
-    AuthModule
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [
