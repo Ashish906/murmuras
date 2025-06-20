@@ -1,28 +1,29 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { Suspense } from 'react';
+import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
+import Loader from './components/loader';
+import Cookie from 'js-cookie';
+import BaseRoute from './components/base-route';
+const Login = React.lazy(() => import('./pages/login'));
+const Registration = React.lazy(() => import('./pages/registration'));
+const AuthWrapper = React.lazy(() => import('./components/auth-wrapper'));
 
 function App() {
-  const [data, setData] = useState<any>(null)
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.post('/api/postTest')
-        console.log(res.data)
-        setData(res.data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
-    
-    fetchData()
-  }, [])
+  const accessToken = Cookie.get('access_token');
 
   return (
-    <div>
-      <h1>Display the data obtained from API here</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+    <BrowserRouter>
+      <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="/" element={accessToken ? <Navigate to="/timeline"/> : <Navigate to="/Login"/>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
+          </Routes>
+      </Suspense>
+      
+      <AuthWrapper>
+        <BaseRoute />
+      </AuthWrapper>
+    </BrowserRouter>
   )
 }
 
