@@ -35,6 +35,6 @@ export class User {
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @OneToMany(() => Murmur, (murmur) => murmur.owner)
+  @OneToMany(() => Murmur, (murmur) => murmur.user)
   murmurs: Murmur[];
 }

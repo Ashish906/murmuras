@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Not, Repository } from 'typeorm';
 import { User } from '../auth/entities/user.entity';
 import { FollowingHistory } from './entities/following-history.entity';
 
@@ -26,10 +26,23 @@ export class UsersService {
     return userInfo;
   }
 
-  async getAllUsers() {
+  async getAllUsers(user: any) {
+    const meFollowing = await this.followingHistoryRepository.find({
+      select: ['following'],
+      where: { follower: user.id }
+    });
+    const followingObj = meFollowing.reduce((acc, cur) => {
+      acc[cur.following] = true;
+      return acc;
+    }, {});
+
     const users = await this.userRepository.find({
       select: ['id', 'name', 'email', 'followers_count', 'following_count'],
-      where: { is_active: true }
+      where: { is_active: true, id: Not(user.id) }
+    });
+
+    users.forEach((user) => {
+      (<any>user).is_following = !!followingObj[user.id];
     });
 
     return users;
@@ -46,6 +59,16 @@ export class UsersService {
 
   async followUser(userId: number, type: number, user: any) {
     const followerId = user.id;
+    if(type === 1) {
+      const existingFollowingHistory = await this.followingHistoryRepository.findOne({
+        select: ['id'],
+        where: { follower: followerId, following: userId }
+      });
+      if(existingFollowingHistory) {
+        return 'You are already following this user';
+      }
+    }
+
     await this.dataSource.transaction(async (transactionalEntityManager) => {
       let counter = 1;
       if(type === 1) {

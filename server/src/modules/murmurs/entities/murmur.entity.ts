@@ -1,9 +1,9 @@
 import { User } from "src/modules/auth/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ForeignKey, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ForeignKey, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { MurmurLikeHistory } from "./murmur-likes-history.entity";
 
 @Entity({
-  name: 'murmurs'
+  name: 'murmurs',
 })
 export class Murmur {
     @PrimaryGeneratedColumn()
@@ -17,7 +17,7 @@ export class Murmur {
 
     @ForeignKey(() => User)
     @Column({ type: 'int', nullable: false })
-    owner_id: number;
+    userId: number;
 
     @CreateDateColumn()
     created_at: Date;
@@ -28,8 +28,8 @@ export class Murmur {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @ManyToOne(() => User)
-    owner: User;
+    @ManyToOne(() => User, (user) => user.murmurs)
+    user: User;
 
     @OneToMany(() => MurmurLikeHistory, (murmurLikeHistory) => murmurLikeHistory.murmur, { onDelete: 'CASCADE' })
     likes: MurmurLikeHistory[];

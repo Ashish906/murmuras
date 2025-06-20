@@ -10,11 +10,11 @@ export class MurmurLikeHistory {
     id: number;
 
     @Column({ type: 'int', nullable: false })
-    murmur_id: number;
+    murmurId: number;
 
     @ForeignKey(() => User)
     @Column({ type: 'int', nullable: false })
-    user_id: number;
+    userId: number;
 
     @CreateDateColumn()
     created_at: Date;

@@ -15,8 +15,10 @@ export class UsersController {
   }
 
   @Get('/all')
-  getAllUsers() {
-    return this.usersService.getAllUsers();
+  getAllUsers(
+    @Request() req: any
+  ) {
+    return this.usersService.getAllUsers(req.user);
   }
 
   @Get('/:user_id')

@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Murmur } from './entities/murmur.entity';
 import { MurmurLikeHistory } from './entities/murmur-likes-history.entity';
 import { User } from '../auth/entities/user.entity';
+import { FollowingHistory } from '../users/entities/following-history.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Murmur,
       MurmurLikeHistory,
+      FollowingHistory,
       User
     ])
   ],

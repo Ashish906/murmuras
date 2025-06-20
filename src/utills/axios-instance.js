@@ -36,9 +36,8 @@ API_REQUEST.interceptors.response.use(
                     API_REQUEST.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
                     return API_REQUEST(originalRequest);
                 } catch (refreshError) {
-                    await fetch('/login/api', {
-                        method: 'DELETE'
-                    })
+                    cookie.remove('access_token');
+                    cookie.remove('refresh_token');
                     window.location.href = '/login';
                 }
             } else {
