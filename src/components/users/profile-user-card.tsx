@@ -8,9 +8,10 @@ const { Title, Text } = Typography;
 
 type UserListProps = {
   user: User;
+  isMyProfile: boolean;
 };
 
-const UserCard: React.FC<UserListProps> = ({ user }) => {
+const ProfileUserCard: React.FC<UserListProps> = ({ user, isMyProfile }) => {
     const [isFollowing, setIsFollowing] = useState<boolean>(user.is_following);
     const [followerCount, setFollowerCount] = useState<number>(user.followers_count);
 
@@ -28,8 +29,11 @@ const UserCard: React.FC<UserListProps> = ({ user }) => {
   return (
     <Col xs={24} sm={12} md={8} lg={6} key={user.id}>
         <Card
-            title={<NavLink to={`/users/${user.id}`}>{user.name}</NavLink>}
-            actions={[
+            title={<Title>{user.name}</Title>}
+            actions={
+                isMyProfile ? []
+                :
+                [
                 !isFollowing ? (
                 <Button type="primary" onClick={() => handleFollow(user.id, 1)}>
                     Follow
@@ -48,4 +52,4 @@ const UserCard: React.FC<UserListProps> = ({ user }) => {
   );
 };
 
-export default UserCard;
+export default ProfileUserCard;

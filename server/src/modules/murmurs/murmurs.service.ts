@@ -67,13 +67,32 @@ export class MurmursService {
     return `You have ${type === 1 ? 'liked' : 'unliked'} the murmur successfully`;
   }
 
-  async getUserMurmurs(userId: number) {
+  async getUserMurmurs(userId: number, user: any) {
+    const myLikedMurmurs = await this.murmurLikeHistoryRepository.find({
+      relations: ['murmur'],
+      where: { 
+        userId: user.id, 
+        murmur: {
+          userId
+        }
+      }
+    });
+    const likedObj = myLikedMurmurs.reduce((acc, cur) => {
+      acc[cur.murmur.id] = true;
+      return acc;
+    }, {});
+
     const murmurs = await this.murmurRepository.find({
+      relations: ['user'],
       where: { userId: userId },
       order: { created_at: 'DESC' }
     });
 
-    return murmurs;
+    return murmurs.map((murmur) => {
+      (<any>murmur).is_liked = !!likedObj[murmur.id];
+      delete murmur?.user?.password;
+      return murmur;
+    });
   }
 
   async getMurmurTimeline(query: PaginationDto, user: any) {

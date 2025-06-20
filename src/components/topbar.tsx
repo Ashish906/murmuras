@@ -2,6 +2,7 @@ import React from "react";
 import { Layout, Menu, Button, Typography } from "antd";
 import { UserOutlined, ClockCircleOutlined, TeamOutlined, LogoutOutlined } from "@ant-design/icons";
 import { UserProfile } from "../interfaces/common.interface";
+import { NavLink } from "react-router-dom";
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -34,7 +35,12 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ profile, onSignOut, onNavigate })
           ]}
         />
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Text style={{ color: "white" }}><UserOutlined /> {profile?.name}</Text>
+          <NavLink 
+            to={`/users/${profile?.id}`}
+            state={{ from: 'profile' }}
+          >
+            <span style={{ color: "white" }}><UserOutlined /> {profile?.name}</span>
+          </NavLink>
           <Button icon={<LogoutOutlined />} onClick={onSignOut}>
             Sign Out
           </Button>
